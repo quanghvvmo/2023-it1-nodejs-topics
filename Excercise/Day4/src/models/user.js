@@ -23,9 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         address: DataTypes.STRING,
         isActive: DataTypes.BOOLEAN,
         createBy: DataTypes.DATE,
-        createAt: DataTypes.DATE,
-        updateAt: DataTypes.DATE,
-        updateBy: DataTypes.DATE
+        updateBy: DataTypes.DATE,
     }, {
         sequelize,
         modelName: 'User',

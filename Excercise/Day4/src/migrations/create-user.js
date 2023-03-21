@@ -35,13 +35,15 @@ module.exports = {
             createBy: {
                 type: Sequelize.DATE
             },
-            createAt: {
-                type: Sequelize.DATE
-            },
             updateBy: {
                 type: Sequelize.DATE
             },
-            updateAt: {
+            createdAt: {
+                allowNull: false,
+                type: Sequelize.DATE
+            },
+            updatedAt: {
+                allowNull: false,
                 type: Sequelize.DATE
             }
         });
