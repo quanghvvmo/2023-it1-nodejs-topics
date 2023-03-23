@@ -42,7 +42,15 @@ let createUser = (data) => {
 let getallUser = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            let users = await db.User.findAll();
+            let users = await db.User.findAll({
+                include: [
+                    {
+                        model: db.Customer
+                    }
+                ],
+                raw: false,
+                nest: true,
+            });
             resolve({
                 errCode: 0,
                 errMsg: 'Success',
