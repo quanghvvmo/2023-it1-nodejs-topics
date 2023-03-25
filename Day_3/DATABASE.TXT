@@ -1,0 +1,11 @@
+CREATE TABLE user (id int NOT NULL AUTO_INCREMENT primary key,username VARCHAR(32), password VARCHAR(250),age int, email varchar(100), phone varchar(20),address varchar(500),isActive int(1),createdBy timestamp, createAt timestamp, updatedAt timestamp, updatedBy TIMESTAMP);
+
+CREATE TABLE customer (id int NOT NULL AUTO_INCREMENT primary key,userID int, paymentMethod int(10),isActive int(1), FOREIGN KEY (userID) REFERENCES user(id));
+
+CREATE TABLE orders (id int AUTO_INCREMENT PRIMARY KEY, customerID int, price DOUBLE,tax DOUBLE,discount DOUBLE,toltalPrice DOUBLE,isDeleted INT (1),createBy TIMESTAMP, createAt TIMESTAMP,updateAt TIMESTAMP,updateBy TIMESTAMP,FOREIGN KEY (customerID) REFERENCES customer(id));
+
+CREATE TABLE product (id VARCHAR(36) NOT NULL PRIMARY KEY, NAME varchar(300), DESCRIPTION VARCHAR(400), price DOUBLE, tax DOUBLE, discount DOUBLE, totalPrice DOUBLE, isDeleted INT(1), createBy TIMESTAMP, createAt TIMESTAMP,updateAt TIMESTAMP,updateBy TIMESTAMP);
+
+CREATE TABLE OrderDetail (id VARCHAR(36), orderID INT, productID VARCHAR(36),  price DOUBLE, tax DOUBLE, discount DOUBLE, totalPrice DOUBLE, isdeleted INT(1), createBy TIMESTAMP, createAt TIMESTAMP, updateAt TIMESTAMP, updateby TIMESTAMP, FOREIGN KEY (orderID) REFERENCES orders(id),FOREIGN KEY (productID) REFERENCES product(id));
+
+CREATE TABLE ProductImages (id VARCHAR(36), NAME INT(10), productID VARCHAR(36), url INT(10), isDeleted INT(1), createBy TIMESTAMP, createAt TIMESTAMP,updateAt TIMESTAMP, updateby TIMESTAMP,FOREIGN KEY (productID) REFERENCES product(id))
