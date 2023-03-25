@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
-const { User } = require("../models/index").models;
+const { User, Customer } = require("../models/index").models;
 
 async function addUser({ username, password, age, mail, phone, address }) {
     // Check if the username already exists
@@ -46,7 +46,11 @@ async function getListUsers() {
 }
 
 async function getUserDetail({ id }) {
-    const user = await User.findOne({ where: { id }, attributes: { exclude: ["password"] } });
+    const user = await User.findOne({
+        include: [Customer],
+        where: { id },
+        attributes: { exclude: ["password"] },
+    });
 
     return user;
 }
@@ -70,13 +74,13 @@ async function inactiveUser({ id }) {
 }
 
 async function deleteUser({ id }) {
-    const user = await User.destroy({
+    await User.destroy({
         where: {
             id,
         },
     });
 
-    return user;
+    return id;
 }
 
 module.exports = {

@@ -11,7 +11,7 @@ const {
 const addUserController = async function (req, res) {
     try {
         const createdUserId = await addUser(req.body);
-        return res.status(200).json(createdUserId);
+        return res.status(201).json(createdUserId);
     } catch (error) {
         if (error.message) return res.status(400).json({ message: error.message });
         return res.status(500).json(error);
