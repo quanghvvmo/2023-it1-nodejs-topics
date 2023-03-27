@@ -1,6 +1,22 @@
 import { v4 as uuidv4 } from "uuid";
-import db from "../models/index"
+import bcrypt from "bcrypt";
+import db from "../models/index";
+import { UserModel, CustomerModel } from "../models/MongoModel/model";
+import _ from "lodash";
 
+const salt = bcrypt.genSaltSync(10);
+let hashUserPassword = (password) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let hashPassword = await bcrypt.hashSync(password, salt);
+            resolve(hashPassword);
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
+//Sequelize
 let createUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -51,6 +67,7 @@ let getallUser = () => {
                 raw: false,
                 nest: true,
             });
+            users = _.sortBy(users, [function (u) { return u.username; }])
             resolve({
                 errCode: 0,
                 errMsg: 'Success',
@@ -208,6 +225,107 @@ let updateUser = (data) => {
         }
     })
 }
+
+//Mongo
+let getAllUserMongo = (page) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let users = await UserModel.find();
+            if (page) {
+                page = parseInt(page);
+                let skip = (page - 1) * 3
+                let pageUsers = await UserModel.find().skip(skip).limit(3)
+                resolve({
+                    errCode: 0,
+                    errMsg: 'Success',
+                    pageUsers
+                })
+            }
+            resolve({
+                errCode: 0,
+                errMsg: 'Success',
+                users
+            })
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+let createUserMongo = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let passwordHash = await hashUserPassword(data.password)
+            let existUser = await UserModel.findOne({
+                username: data.username
+            })
+            if (existUser) {
+                resolve({
+                    errCode: 1,
+                    errMsg: 'Username is already exsiting'
+                })
+            } else {
+                /*await User.create({
+                    username: data.username,
+                    password: passwordHash,
+                    age: data.age,
+                    email: data.email,
+                    phone: data.phone,
+                    address: data.address,
+                    isActive: data.isActive,
+                    createBy: data.createBy,
+                    updateBy: data.updateBy,
+                    customer: data.customer
+                })
+                await Customer.create({
+                    userid: 
+                })*/
+                const user = new UserModel(data);
+                await user.save();
+                if (data.customer) {
+                    const customer = new CustomerModel(data.customer)
+                    customer.userid = user._id
+                    await customer.save();
+                }
+                resolve({
+                    errCode: 0,
+                    errMsg: 'The new User has been created'
+                })
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+let updateUserMongo = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let passwordHash = await hashUserPassword(data.password)
+            let user = await UserModel.findOne({
+                username: data.username
+            })
+            if (user) {
+                await UserModel.updateOne({
+                    password: passwordHash,
+                    age: data.age,
+                    phone: data.phone,
+                    address: data.address,
+                    isActive: data.isActive,
+                })
+                resolve({
+                    errCode: 0,
+                    errMsg: 'The user is updated',
+                })
+            } else resolve({
+                errCode: -1,
+                errMsg: 'Not found user'
+            })
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+
+
 module.exports = {
     createUser: createUser,
     getallUser: getallUser,
@@ -215,5 +333,9 @@ module.exports = {
     activeUser: activeUser,
     inactiveUser: inactiveUser,
     deleteUserById: deleteUserById,
-    updateUser: updateUser
+    updateUser: updateUser,
+
+    getAllUserMongo: getAllUserMongo,
+    createUserMongo: createUserMongo,
+    updateUserMongo: updateUserMongo
 }

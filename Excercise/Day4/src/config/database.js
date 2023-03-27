@@ -3,7 +3,7 @@ const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize('order_management', 'root', null, {
     host: 'localhost',
     dialect: 'mysql'
-  });
+});
 
 let connectDB = async () => {
     try {

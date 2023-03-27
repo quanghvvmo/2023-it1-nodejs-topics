@@ -1,5 +1,7 @@
 import userService from "../services/userService"
 
+
+//Sequelize
 let createUser = async (req, res) => {
     let result = await userService.createUser(req.body);
     if (result.errCode === 1) {
@@ -75,6 +77,34 @@ let updateUser = async (req, res) => {
         return res.status(404).json(result);
     } else return res.status(200).json(result)
 };
+
+//Mongo
+let getAllUserMongo = async (req, res) => {
+    let page = req.query.page;
+    let result = await userService.getAllUserMongo(page);
+    if (result.errCode === 0) {
+        return res.status(200).json(result);
+    }
+}
+
+let createUserMongo = async (req, res) => {
+    let result = await userService.createUserMongo(req.body);
+    if (result.errCode === 1) {
+        return res.status(400).json(result.errMsg);
+    } else if (result.errCode === 0) {
+        return res.status(200).json(result.errMsg);
+    }
+}
+
+let updateUserMongo = async (req, res) => {
+    let data = req.body;
+    let result = await userService.updateUserMongo(data);
+    if (result.errCode === -1) {
+        return res.status(404).json(result);
+    } else return res.status(200).json(result)
+}
+
+
 module.exports = {
     createUser: createUser,
     getallUser: getallUser,
@@ -82,5 +112,10 @@ module.exports = {
     activeUser: activeUser,
     inactiveUser: inactiveUser,
     deleteUser: deleteUser,
-    updateUser: updateUser
+    updateUser: updateUser,
+
+
+    getAllUserMongo: getAllUserMongo,
+    createUserMongo: createUserMongo,
+    updateUserMongo: updateUserMongo
 }
