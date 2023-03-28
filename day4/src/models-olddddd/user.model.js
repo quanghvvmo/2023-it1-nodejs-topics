@@ -1,31 +1,40 @@
-const { DataTypes } = require("sequelize");
+import { DataTypes } from "sequelize";
 
-module.exports = (sequelize) => {
-    const OrderDetails = sequelize.define(
-        "OrderDetails",
+export default (sequelize) => {
+    const User = sequelize.define(
+        "User",
         {
             id: {
                 type: DataTypes.STRING(36),
                 allowNull: false,
                 primaryKey: true,
             },
-            price: {
-                type: DataTypes.DOUBLE,
+            username: {
+                type: DataTypes.STRING(32),
+                allowNull: true,
+                unique: true,
+            },
+            password: {
+                type: DataTypes.STRING(250),
                 allowNull: true,
             },
-            tax: {
-                type: DataTypes.DOUBLE,
+            age: {
+                type: DataTypes.INTEGER,
                 allowNull: true,
             },
-            discount: {
-                type: DataTypes.DOUBLE,
+            mail: {
+                type: DataTypes.STRING(100),
                 allowNull: true,
             },
-            totalPrice: {
-                type: DataTypes.DOUBLE,
-                allowNull: true,
+            phone: {
+                type: DataTypes.STRING(20),
+                allowNull: false,
             },
-            isDeleted: {
+            address: {
+                type: DataTypes.STRING(500),
+                allowNull: false,
+            },
+            isActive: {
                 type: DataTypes.INTEGER,
                 allowNull: true,
             },
@@ -43,5 +52,5 @@ module.exports = (sequelize) => {
         }
     );
 
-    return OrderDetails;
+    return User;
 };

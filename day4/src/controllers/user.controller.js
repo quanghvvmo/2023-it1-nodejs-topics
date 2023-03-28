@@ -1,12 +1,4 @@
-const {
-    addUser,
-    updateUser,
-    getListUsers,
-    getUserDetail,
-    activeUser,
-    inactiveUser,
-    deleteUser,
-} = require("../services/user.service");
+import { addUser, updateUser, getListUsers, getUserDetail, activeUser, inactiveUser, deleteUser } from "../services/user.service";
 
 const addUserController = async function (req, res) {
     try {
@@ -78,7 +70,7 @@ const deleteUserController = async function (req, res) {
     }
 };
 
-module.exports = {
+export default {
     addUserController,
     updateUserController,
     getListUsersController,

@@ -1,5 +1,6 @@
-const { v4: uuidv4 } = require("uuid");
-const { User, Customer } = require("../models/index").models;
+import { v4 as uuidv4 } from "uuid";
+import { models } from "../models-olddddd/index";
+const { User, Customer } = models;
 
 async function addUser({ username, password, age, mail, phone, address }) {
     // Check if the username already exists
@@ -83,7 +84,7 @@ async function deleteUser({ id }) {
     return id;
 }
 
-module.exports = {
+export default {
     addUser,
     updateUser,
     getListUsers,

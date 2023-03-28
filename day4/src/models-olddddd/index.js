@@ -1,5 +1,5 @@
-const Sequelize = require("sequelize");
-const applyExtraSetup = require("./associates");
+import Sequelize from "sequelize";
+import applyExtraSetup from "./associates";
 
 const sequelize = new Sequelize(
     process.env.DB_NAME,
@@ -38,4 +38,4 @@ applyExtraSetup(sequelize);
 //     console.log("Sync successfully.");
 // });
 
-module.exports = sequelize;
+export default sequelize;
