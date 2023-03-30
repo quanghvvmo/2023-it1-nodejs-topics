@@ -4,12 +4,13 @@ import * as Sequelize from "sequelize";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-import sequelize from "../config/database.js";
+import sequelize from "./config/database.js";
 
 class Db {
     constructor() {
         // Init models
-        const db = {};
+        this.db = {};
+        this.sequelize = sequelize;
 
         fs.readdirSync(path.join(__dirname, "models"))
             .filter((file) => {
@@ -19,16 +20,17 @@ class Db {
                     file.indexOf(".test.js") === -1
                 );
             })
-            .forEach((file) => {
-                const model = import(path.join(__dirname, "models", file));
-                console.log(model);
-                // (sequelize, Sequelize.DataTypes);
-                db[model.name] = model;
+            .forEach(async (file) => {
+                const modelFunc = await import(path.join(__dirname, "models", file));
+
+                const model = modelFunc.default(sequelize, Sequelize.DataTypes);
+
+                this.db[model.name] = model;
             });
 
-        Object.keys(db).forEach((modelName) => {
-            if (db[modelName].associate) {
-                db[modelName].associate(db);
+        Object.keys(this.db).forEach((modelName) => {
+            if (this.db[modelName].associate) {
+                this.db[modelName].associate(this.db);
             }
         });
     }

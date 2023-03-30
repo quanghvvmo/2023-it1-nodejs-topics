@@ -1,4 +1,4 @@
-import config from "../config/config.json" assert { type: "json" };
+import config from "../_database/config/config.json" assert { type: "json" };
 
 const getEnvironmentSetting = async () => {
     process.env.NODE_ENV = process.env.NODE_ENV || "development";

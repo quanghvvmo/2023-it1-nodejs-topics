@@ -2,13 +2,13 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 const app = express();
-// const services = require('./_services');
 import getEnvironmentSetting from "./_utils/environment.js";
 // import { stream as _stream, info, error as _error } from "./_utils/logger";
 import config from "./config/index.js";
 
-import db from "./_database/db.js";
-// import { converter, notFound, handler } from "./middlewares/error";
+import db from "./_database/index.js";
+import routers from "./routes/index.js";
+import { converter, notFound, handler } from "./middlewares/errorHandler.middleware.js";
 
 // Configuring cors
 app.use(cors());
@@ -17,13 +17,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(morgan(config.morgan_format));
-app.get("/init", (req, res) => res.send("App is working"));
 
 const initService = () => {
-    const services = require("./_services");
     console.log("Init - Register services.");
-    services(app);
-    console.log(`Init - Register services '${services.name}' successfully.`);
+    app.use(routers);
+    console.log(`Init - Register services successfully.`);
     return;
 };
 
@@ -49,8 +47,6 @@ const handleError = () => {
 
     // error handler, send stacktrace only during development
     app.use(handler);
-
-    return;
 };
 
 const startServer = async () => {
@@ -60,9 +56,9 @@ const startServer = async () => {
 
 getEnvironmentSetting()
     // .then(registerMiddleware.bind(this, app))
-    // .then(initService.bind(this))
-    // .then(handleError.bind(this))
-    // .then(initSequelize(db))
+    .then(initService.bind(this))
+    .then(handleError.bind(this))
+    .then(initSequelize(db))
     // .then(migrateSequelize.bind(this))
     .then(startServer.bind(this))
     .catch((error) => {

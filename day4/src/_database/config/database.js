@@ -1,5 +1,5 @@
 import Sequelize from "sequelize";
-import config from "./index.js";
+import config from "../../config/index.js";
 
 const options = {
     database: config.db_database,
