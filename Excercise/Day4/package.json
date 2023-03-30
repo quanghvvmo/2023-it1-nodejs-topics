@@ -32,6 +32,8 @@
     "chai-http": "^4.3.0",
     "mocha": "^10.2.0",
     "nodemon": "^2.0.21",
-    "sequelize-cli": "^6.6.0"
+    "sequelize-cli": "^6.6.0",
+    "swagger-ui-express": "^4.6.2",
+    "yamljs": "^0.3.0"
   }
 }
