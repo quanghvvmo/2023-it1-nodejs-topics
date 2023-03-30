@@ -264,7 +264,9 @@ let createUserMongo = (data) => {
                     errMsg: 'Username is already exsiting'
                 })
             } else {
-                /*await User.create({
+                let newCustomer = new CustomerModel(data.customer)
+                await newCustomer.save();
+                await User.create({
                     username: data.username,
                     password: passwordHash,
                     age: data.age,
@@ -274,18 +276,8 @@ let createUserMongo = (data) => {
                     isActive: data.isActive,
                     createBy: data.createBy,
                     updateBy: data.updateBy,
-                    customer: data.customer
+                    customer: newCustomer
                 })
-                await Customer.create({
-                    userid: 
-                })*/
-                const user = new UserModel(data);
-                await user.save();
-                if (data.customer) {
-                    const customer = new CustomerModel(data.customer)
-                    customer.userid = user._id
-                    await customer.save();
-                }
                 resolve({
                     errCode: 0,
                     errMsg: 'The new User has been created'

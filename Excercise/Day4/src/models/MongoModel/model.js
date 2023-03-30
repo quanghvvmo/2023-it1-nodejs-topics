@@ -19,12 +19,9 @@ const User = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'customer'
     }
-}, {
-    collection: 'user'
 });
 
 const Customer = new mongoose.Schema({
-    userid: { type: mongoose.Types.ObjectId, required: true },
     paymentMethod: Number,
     isActive: { type: Boolean, required: true },
 })
