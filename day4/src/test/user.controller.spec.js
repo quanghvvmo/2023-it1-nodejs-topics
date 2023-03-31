@@ -1,8 +1,9 @@
+process.env.NODE_ENV = "test";
+
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../src/index");
 const should = chai.should();
-// const { User } = require("../src/models/index").models;
 
 chai.use(chaiHttp);
 

@@ -6,14 +6,14 @@ import APIError from "../helper/apiError.js";
 import config from "../config/index.js";
 
 const SequelizeError = sequelize.Error;
-const { Promise, ValidationError, ForeignKeyConstraintError } = sequelize;
+const { AggregateError, ValidationError, ForeignKeyConstraintError } = sequelize;
 
 /**
  * Error handler. Send stacktrace only during development
  * @public
  */
 export const handler = (err, req, res) => {
-    const response = {
+    const responseError = {
         code: err.status,
         message: err.message || httpStatus[err.status],
         errors: err.errors,
@@ -21,10 +21,10 @@ export const handler = (err, req, res) => {
     };
 
     if (config.env !== "development" && config.env !== "localhost") {
-        delete response.stack;
+        delete responseError.stack;
     }
 
-    res.status(err.status).json(response);
+    res.status(err.status).json(responseError);
 };
 
 /**
@@ -32,6 +32,7 @@ export const handler = (err, req, res) => {
  * @public
  */
 export const converter = (err, req, res, next) => {
+    if (err instanceof APIError) return handler(err, req, res);
     let convertedError = err;
 
     if (err instanceof SequelizeError) {
@@ -65,14 +66,13 @@ export const converter = (err, req, res, next) => {
                 stack: err.stack,
             });
         }
-    } else if (err instanceof Promise.AggregateError) {
+    } else if (err instanceof AggregateError) {
         const errors = {};
         err.forEach((item) => {
             item.errors.errors.forEach((e) => {
                 errors[e.path] = e.message;
             });
         });
-
         convertedError = new APIError({
             message: "Validation Error",
             errors: Object.keys(errors).map((item) => {

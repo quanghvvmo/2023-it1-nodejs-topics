@@ -1,16 +1,14 @@
 import fs from "fs";
 import path from "path";
 import * as Sequelize from "sequelize";
+import sequelize from "./config/database.js";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
-import sequelize from "./config/database.js";
 
 class Db {
     constructor() {
         // Init models
         this.db = {};
-        this.sequelize = sequelize;
 
         fs.readdirSync(path.join(__dirname, "models"))
             .filter((file) => {
@@ -35,13 +33,12 @@ class Db {
         });
     }
 
-    getSequelize() {
-        return sequelize;
+    connect() {
+        return sequelize.authenticate();
     }
 
-    connect() {
-        const connectPromise = sequelize.authenticate();
-        return connectPromise;
+    getModels() {
+        return this.db;
     }
 }
 

@@ -1,12 +1,18 @@
 import { addUser } from "../services/user.service.js";
+import httpStatus from "http-status";
+import { createSchema } from "../validations/user.validation.js";
 
-const addUserController = async function (req, res) {
+const addUserController = async (req, res, next) => {
     try {
-        const createdUserId = await addUser(req);
-        return res.status(201).json(createdUserId);
+        const { error, value } = createSchema.validate(req.body);
+        if (error) {
+            return res.status(httpStatus.BAD_REQUEST).json(error.details[0].message);
+        }
+
+        const createdUserId = await addUser(value);
+        return res.status(httpStatus.CREATED).json(`User ${createdUserId} created !`);
     } catch (error) {
-        if (error.message) return res.status(400).json({ message: error.message });
-        return res.status(500).json(error);
+        next(error);
     }
 };
 

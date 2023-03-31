@@ -16,3 +16,4 @@ userRouter.post("/api/v1/users", addUserController);
 // userRouter.delete("/api/v1/users/:id", deleteUserController);
 
 export default userRouter;
+

@@ -11,6 +11,7 @@ const configs = {
         name: process.env.APP_NAME || "SIMPLE_APP_NAME",
         host: process.env.HTTP_HOST || "localhost",
         port: process.env.HTTP_PORT || 8080,
+
         // Database
         db_host: process.env.DB_HOST || "localhost",
         db_port: process.env.DB_PORT || 3306,
@@ -19,7 +20,6 @@ const configs = {
         db_password: process.env.DB_PASSWORD,
         db_database: process.env.DB_DATABASE,
 
-        db_run_migration: process.env.DB_RUN_MIGRATION != "false", // True as default
         // Security
         token_secret: process.env.TOKEN_SECRET || "ITSASECRET",
         token_expiry: process.env.TOKEN_EXPIRY || 60 * 60 * 24 * 3, // Expiry day for 3 days.

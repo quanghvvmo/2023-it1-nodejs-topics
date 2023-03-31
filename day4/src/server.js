@@ -1,15 +1,15 @@
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
-const app = express();
+import swaggerUi from "swagger-ui-express";
 import getEnvironmentSetting from "./_utils/environment.js";
-// import { stream as _stream, info, error as _error } from "./_utils/logger";
 import config from "./config/index.js";
-
 import db from "./_database/index.js";
 import routers from "./routes/index.js";
-import { converter, notFound, handler } from "./middlewares/errorHandler.middleware.js";
+import { converter, notFound } from "./middlewares/errorHandler.middleware.js";
+import swaggerDocument from "./config/swagger.js";
 
+const app = express();
 // Configuring cors
 app.use(cors());
 // Configuring body parser middleware
@@ -21,8 +21,10 @@ app.use(morgan(config.morgan_format));
 const initService = () => {
     console.log("Init - Register services.");
     app.use(routers);
+
+    // Init api documents
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     console.log(`Init - Register services successfully.`);
-    return;
 };
 
 const initSequelize = (db) => {
@@ -44,9 +46,6 @@ const handleError = () => {
 
     // catch 404 and forward to error handler
     app.use(notFound);
-
-    // error handler, send stacktrace only during development
-    app.use(handler);
 };
 
 const startServer = async () => {
@@ -56,10 +55,9 @@ const startServer = async () => {
 
 getEnvironmentSetting()
     // .then(registerMiddleware.bind(this, app))
+    .then(initSequelize(db))
     .then(initService.bind(this))
     .then(handleError.bind(this))
-    .then(initSequelize(db))
-    // .then(migrateSequelize.bind(this))
     .then(startServer.bind(this))
     .catch((error) => {
         console.error("Startup Error: ", error);
