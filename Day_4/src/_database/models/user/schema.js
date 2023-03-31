@@ -9,11 +9,13 @@ module.exports = {
     },
     username:{
         type:Sequelize.STRING(32),
-        allowNull:false
+        allowNull:false,
+        unique: true
     },
     password:{
         type:Sequelize.STRING(250),
-        allowNull:false
+        allowNull:false,
+        
     },
     age:{
         type:Sequelize.INTEGER(2),
@@ -21,7 +23,8 @@ module.exports = {
     },
     email:{
         type:Sequelize.STRING(100),
-        allowNull:true
+        allowNull:true,
+        unique: true
     },
     phone:{
         type:Sequelize.STRING(100),
