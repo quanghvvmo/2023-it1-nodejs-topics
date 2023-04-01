@@ -8,30 +8,7 @@ class User {
         const users = await user.findAll();
         res.send(users);
     }
-    addUser = async(req,res,next)=>{
-        //destructuring assignment
-        const { username, password, age, email, phone, address, isActive, createdBy, updatedBy } = req.body;
-        if( await user.findOne({where: {username}})){
-            return res.status(400).json({ message: 'Username already exists' });
-        }
-        try{
-            const newUser = await user.create({            
-                username,
-                password,
-                age,
-                email,
-                phone,
-                address,
-                isActive,
-                createdBy,
-                updatedBy
-            })
-            res.status(200).json(newUser);
-        }
-        catch (err) {
-            res.status(400).json(err);
-        }
-    }
+
     updateUser =async (req,res,next) => {
         try{
             const userFind = await user.findOne({ where: { username:username } })
@@ -44,15 +21,6 @@ class User {
         catch(err){
             res.status(400).json({ message: "Error updating a user" });
         }        
-    }
-    getUserDetails = async (req, res) =>{
-        try{
-            const username = req.params.username
-            res.send( await user.findOne({where:{username:username}}))
-        }
-        catch(err){
-            res.status(400).json({ message: "Error" });
-        }
     }
     activeUser = async (req,res) =>{
         try{

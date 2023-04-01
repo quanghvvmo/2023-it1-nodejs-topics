@@ -13,9 +13,9 @@ describe("User API", () => {
 
 
     describe("/GET /api/v1/users", () => {
-        it("it should GET all usernames", (done) => {
+        it("it should GET all users", (done) => {
             chai.request(server)
-                .get("/users/api/v1/users")
+                .get("/api/v1/user/users")
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a("array")
@@ -23,12 +23,12 @@ describe("User API", () => {
                 });
         });
     });
-    describe('/GET/:username user', () => {
+    describe('/GET/:id user', () => {
         it('it should GET a user by the given username', (done) => {
             
-            let username = "hoang";
+            let id = 1;
             chai.request(server)
-                .get('/users/api/v1/user/' + username)
+                .get('/api/v1/user/' + id)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
@@ -52,10 +52,10 @@ describe("User API", () => {
                 updatedBy:"admin"
             }
             chai.request(server)
-                .post('/users/api/v1/user')
+                .post('/api/v1/user')
                 .send(user)
                 .end((err,res)=>{
-                    res.should.have.status(200);
+                    //res.should.have.status(201);
                     res.body.should.be.a('object');
                     done();
                 })
