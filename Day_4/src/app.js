@@ -19,12 +19,20 @@ const initSequelize = () => {
             return false;
         });
 };
-initSequelize()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/users',userRoutes)
+//app.use('/users',userRoutes)
+const initService = () => {
+    const services = require('./controller');
+    console.log('Init - Register services.');
+    services(app);
+    console.log(`Init - Register services '${services.name}' successfully.`);
+    return;
+};
 const startServer = async () => {
     app.listen(config.port, config.host);
+    initSequelize();
+    initService();
     console.log(`Listening on host ${config.host} on port ${config.port} http://${config.host}:${config.port}`);
 };
 startServer();

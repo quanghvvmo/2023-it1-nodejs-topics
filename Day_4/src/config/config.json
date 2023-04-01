@@ -1,8 +1,15 @@
 {
-    "localhost": {
+    "dev": {
         "username": "root",
         "password": "",
         "database": "sequelize",
+        "host": "127.0.0.1",
+        "dialect": "mysql"
+    },
+    "test": {
+        "username": "root",
+        "password": "",
+        "database": "sequelizeTest",
         "host": "127.0.0.1",
         "dialect": "mysql"
     }
